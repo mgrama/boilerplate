@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import uuid from 'uuid';
+import lodash from 'lodash';
 import logo from './logo.svg';
 import './App.css';
 
@@ -83,6 +84,12 @@ class App extends Component {
   handlePrevPage = () => {
     this.setState({
       page: this.state.page - 1
+    })
+  }
+
+  handleSetPage = (page) => {
+    this.setState({
+      page
     })
   }
 
@@ -185,20 +192,25 @@ class App extends Component {
   }
 
   renderOptions = () => {
-    const minElem = this.state.page*LIMIT;
-    const maxElem = minElem + LIMIT-1;
+    const minElem = this.state.page * LIMIT;
+    const maxElem = minElem + LIMIT - 1;
     const pages = Math.ceil(this.state.list.length / LIMIT);
     return (
       <React.Fragment>
       {!!pages &&
         <div>
+          {
+            lodash.times(pages, (i)=> {
+              return (<button onClick={() => {this.handleSetPage(i)}}>{i + 1}</button>);
+            })
+          }
           <button
             onClick={this.handlePrevPage}
             disabled={this.state.page === 0}
             >назад</button>
           <button
             onClick={this.handleNextPage}
-            disabled={this.state.page === pages-1}
+            disabled={this.state.page === pages - 1}
             >вперед</button>
         </div>
       }
@@ -250,7 +262,6 @@ class App extends Component {
   }
 
   render() {
-    const activePerson = this.state.list.find((item) => item.id === this.state.activeElementId) || {}
 
     return (
       <div style={this.style.wrapper}>
